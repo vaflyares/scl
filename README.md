@@ -1,4 +1,4 @@
-GitHub Repository: [click](https://github.com/shareui/scl)  
+GitHub Repository: [click](https://github.com/vaflyares/scl/tree/main)  
 GitLab Repository: [click](https://gitlab.com/shareui/scl)
 
 # SCL Features
