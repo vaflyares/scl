@@ -124,6 +124,8 @@ allowed_ips :: list(str) { "192.168.1.1", "10.0.0.1" }
 ports :: list(num) { 80, 443, 8080 }
 ```
 
+Example: https://gitlab.com/shareui/gitstats/-/blob/main/main/main.py#L17
+
 ---
 
 ## Документация Python
@@ -245,6 +247,8 @@ scl_text = scl_parser.dumps(config)
 разрешенные_ip :: list(str) { "192.168.1.1", "10.0.0.1" }
 порты :: list(num) { 80, 443, 8080 }
 ```
+
+Пример: https://gitlab.com/shareui/gitstats/-/blob/main/main/main.py#L17
 
 ---
 
