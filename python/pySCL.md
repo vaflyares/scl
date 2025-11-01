@@ -124,7 +124,31 @@ allowed_ips :: list(str) { "192.168.1.1", "10.0.0.1" }
 ports :: list(num) { 80, 443, 8080 }
 ```
 
-Example: https://gitlab.com/shareui/gitstats/-/blob/main/main/main.py#L17
+### Example: How to load config
+#### main.py
+```python
+import scl_parser
+
+def load_cfg():
+    config = scl_parser.load(patg/to/cfg.scl)
+return config
+
+config = load_cfg()
+apples = config['count']['apples']
+pears = config['pears']
+print(apples) # Output to console: 2
+print(pears) # Output to console: 3
+
+```
+#### cfg.scl 
+```
+count :: class {
+    apples :: int { 2 }
+    watermelons :: int { 3 }
+}
+
+pears :: int { 3 }
+```
 
 ---
 
@@ -248,7 +272,31 @@ scl_text = scl_parser.dumps(config)
 порты :: list(num) { 80, 443, 8080 }
 ```
 
-Пример: https://gitlab.com/shareui/gitstats/-/blob/main/main/main.py#L17
+### Пример: Как загрузить конфигурацию
+#### main.py
+```python
+import scl_parser
+
+def load_cfg():
+    config = scl_parser.load(patg/to/cfg.scl)
+return config
+
+config = load_cfg()
+apples = config['count']['apples']
+pears = config['pears']
+print(apples) # Вывод: 2
+print(pears) # Вывод: 3
+
+```
+#### cfg.scl 
+```
+count :: class {
+    apples :: int { 2 }
+    watermelons :: int { 3 }
+}
+
+pears :: int { 3 }
+```
 
 ---
 
