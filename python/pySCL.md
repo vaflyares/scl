@@ -14,8 +14,16 @@
 
 ### Installation
 
-1. Download `scl_parser.py` and add it to your project directory
-2. Import and use:
+```bash
+pip install structcfg-parser
+```
+
+Or add to your `requirements.txt`:
+```
+structcfg-parser==1.0.1
+```
+
+Then import and use:
 
 ```python
 import scl_parser
@@ -124,23 +132,26 @@ allowed_ips :: list(str) { "192.168.1.1", "10.0.0.1" }
 ports :: list(num) { 80, 443, 8080 }
 ```
 
-### Example: How to load config
-#### main.py
+### Python Usage Examples
+
+#### Example 1: Simple Configuration Loading
+**main.py**
 ```python
 import scl_parser
 
 def load_cfg():
-    config = scl_parser.load("patg/to/cfg.scl")
+    config = scl_parser.load("path/to/cfg.scl")
     return config
 
 config = load_cfg()
 apples = config['count']['apples']
 pears = config['pears']
-print(apples) # output: 2
-print(pears) # output 3
 
+print(apples)  # Output: 2
+print(pears)   # Output: 3
 ```
-#### cfg.scl 
+
+**cfg.scl**
 ```
 count :: class {
     apples :: num { 2 }
@@ -148,6 +159,131 @@ count :: class {
 }
 
 pears :: num { 3 }
+```
+
+#### Example 2: Working with Lists
+**app.py**
+```python
+import scl_parser
+
+config = scl_parser.load("settings.scl")
+
+# Access list items
+servers = config['servers']
+print(f"First server: {servers[0]}")  # Output: First server: server1.com
+
+# Iterate over list
+for server in servers:
+    print(f"Server: {server}")
+
+# Access numeric lists
+ports = config['network']['ports']
+print(f"Available ports: {ports}")  # Output: Available ports: [80, 443, 8080]
+
+# Access nested values
+db_config = config['database']
+print(f"DB Host: {db_config['host']}")  # Output: DB Host: localhost
+print(f"DB Port: {db_config['port']}")  # Output: DB Port: 5432
+```
+
+**settings.scl**
+```
+servers :: list(str) { "server1.com", "server2.com", "server3.com" }
+
+network :: class {
+    ports :: list(num) { 80, 443, 8080 }
+    ssl_enabled :: bool { yes }
+}
+
+database :: class {
+    host :: str { "localhost" }
+    port :: num { 5432 }
+    credentials :: class {
+        username :: str { "admin" }
+        use_ssl :: bool { true }
+    }
+}
+```
+
+#### Example 3: Creating and Saving Configuration
+**generate_config.py**
+```python
+import scl_parser
+
+# Create configuration dictionary
+config = {
+    'app_name': 'MyApplication',
+    'version': '2.1.0',
+    'debug_mode': False,
+    'max_workers': 10,
+    'timeout': 30.5,
+    'features': ['auth', 'api', 'admin'],
+    'limits': [100, 500, 1000],
+    'settings': {
+        'cache_enabled': True,
+        'cache_ttl': 3600,
+        'log_level': 'INFO'
+    }
+}
+
+# Save to file
+scl_parser.dump(config, "generated_config.scl")
+
+# Or get as string
+scl_string = scl_parser.dumps(config)
+print(scl_string)
+```
+
+**generated_config.scl** (output)
+```
+app_name :: str { "MyApplication" }
+version :: str { "2.1.0" }
+debug_mode :: bool { false }
+max_workers :: num { 10 }
+timeout :: fl { 30.5 }
+features :: list(str) { "auth", "api", "admin" }
+limits :: list(num) { 100, 500, 1000 }
+settings :: class {
+    cache_enabled :: bool { true }
+    cache_ttl :: num { 3600 }
+    log_level :: str { "INFO" }
+}
+```
+
+#### Example 4: Multiline Strings
+**readme_gen.py**
+```python
+import scl_parser
+
+config = scl_parser.loads("""
+project_info :: class {
+    name :: str { "MyProject" }
+    
+    description :: ml {
+        'This is a long description
+        that spans multiple lines.
+        It can contain detailed information
+        about the project.'
+    }
+    
+    readme :: ml {
+        '# MyProject
+        
+        ## Installation
+        pip install myproject
+        
+        ## Usage
+        import myproject'
+    }
+}
+""")
+
+info = config['project_info']
+print(info['name'])
+print("\nDescription:")
+print(info['description'])
+print("\nReadme:")
+print(info['readme'])
 ```
 
 ---
@@ -162,8 +298,16 @@ pears :: num { 3 }
 
 ### Установка
 
-1. Скачайте `scl_parser.py` и добавьте его в директорию вашего проекта
-2. Импортируйте и используйте:
+```bash
+pip install structcfg-parser
+```
+
+Или добавьте в ваш `requirements.txt`:
+```
+structcfg-parser==1.0.1
+```
+
+Затем импортируйте и используйте:
 
 ```python
 import scl_parser
@@ -197,98 +341,101 @@ scl_text = scl_parser.dumps(config)
 
 **Логический** - `bool`
 ```
-включено :: bool { true }
-выключено :: bool { false }
-активно :: bool { yes }
-неактивно :: bool { no }
+enabled :: bool { true }
+disabled :: bool { false }
+active :: bool { yes }
+inactive :: bool { no }
 ```
 
 **Строка** - `str`
 ```
-имя :: str { "Привет Мир" }
+name :: str { "Hello World" }
 ```
 
 **Целое число** - `num`
 ```
-количество :: num { 42 }
-отрицательное :: num { -10 }
+count :: num { 42 }
+negative :: num { -10 }
 ```
 
 **Число с плавающей точкой** - `fl`
 ```
-цена :: fl { 19.99 }
-температура :: fl { -5.5 }
+price :: fl { 19.99 }
+temperature :: fl { -5.5 }
 ```
 
 **Многострочная строка** - `ml`
 ```
-описание :: ml {
-    'Это многострочный
-    текст с переносами
-    строк'
+description :: ml {
+    'This is a
+    multiline text
+    with line breaks'
 }
 ```
 
 **Объект** - `class`
 ```
-пользователь :: class {
-    имя :: str { "Иван" }
-    возраст :: num { 30 }
-    активен :: bool { yes }
+user :: class {
+    name :: str { "John" }
+    age :: num { 30 }
+    active :: bool { yes }
 }
 ```
 
 **Список** - `list(тип)`
 ```
-числа :: list(num) { 1, 2, 3, 4, 5 }
-имена :: list(str) { "Алиса", "Боб", "Чарли" }
-флаги :: list(bool) { true, false, true }
-цены :: list(fl) { 9.99, 19.99, 29.99 }
+numbers :: list(num) { 1, 2, 3, 4, 5 }
+names :: list(str) { "Alice", "Bob", "Charlie" }
+flags :: list(bool) { true, false, true }
+prices :: list(fl) { 9.99, 19.99, 29.99 }
 ```
 
 ### Пример конфигурации
 
 ```scl
-[ Конфигурация приложения ]
+[ Application Configuration ]
 
-название_приложения :: str { "МоёПриложение" }
-версия :: str { "1.0.0" }
-отладка :: bool { true }
-макс_соединений :: num { 100 }
-таймаут :: fl { 30.5 }
+app_name :: str { "MyApp" }
+version :: str { "1.0.0" }
+debug :: bool { true }
+max_connections :: num { 100 }
+timeout :: fl { 30.5 }
 
-описание :: ml {
-    'Это пример
-    конфигурации приложения'
+description :: ml {
+    'This is a sample
+    application configuration'
 }
 
-база_данных :: class {
-    хост :: str { "localhost" }
-    порт :: num { 5432 }
+database :: class {
+    host :: str { "localhost" }
+    port :: num { 5432 }
     ssl :: bool { yes }
 }
 
-разрешенные_ip :: list(str) { "192.168.1.1", "10.0.0.1" }
-порты :: list(num) { 80, 443, 8080 }
+allowed_ips :: list(str) { "192.168.1.1", "10.0.0.1" }
+ports :: list(num) { 80, 443, 8080 }
 ```
 
-### Пример: Как загрузить конфигурацию
-#### main.py
+### Примеры использования в Python
+
+#### Пример 1: Простая загрузка конфигурации
+**main.py**
 ```python
 import scl_parser
 
 def load_cfg():
-    config = scl_parser.load("patg/to/cfg.scl")
+    config = scl_parser.load("path/to/cfg.scl")
     return config
 
 config = load_cfg()
 apples = config['count']['apples']
 pears = config['pears']
-print(apples) # Вывод: 2
-print(pears) # Вывод: 3
 
+print(apples)  # Вывод: 2
+print(pears)   # Вывод: 3
 ```
-#### cfg.scl 
+
+**cfg.scl**
 ```
 count :: class {
     apples :: num { 2 }
@@ -296,6 +443,131 @@ count :: class {
 }
 
 pears :: num { 3 }
+```
+
+#### Пример 2: Работа со списками
+**app.py**
+```python
+import scl_parser
+
+config = scl_parser.load("settings.scl")
+
+# Доступ к элементам списка
+servers = config['servers']
+print(f"First server: {servers[0]}")  # Вывод: First server: server1.com
+
+# Итерация по списку
+for server in servers:
+    print(f"Server: {server}")
+
+# Доступ к числовым спискам
+ports = config['network']['ports']
+print(f"Available ports: {ports}")  # Вывод: Available ports: [80, 443, 8080]
+
+# Доступ к вложенным значениям
+db_config = config['database']
+print(f"DB Host: {db_config['host']}")  # Вывод: DB Host: localhost
+print(f"DB Port: {db_config['port']}")  # Вывод: DB Port: 5432
+```
+
+**settings.scl**
+```
+servers :: list(str) { "server1.com", "server2.com", "server3.com" }
+
+network :: class {
+    ports :: list(num) { 80, 443, 8080 }
+    ssl_enabled :: bool { yes }
+}
+
+database :: class {
+    host :: str { "localhost" }
+    port :: num { 5432 }
+    credentials :: class {
+        username :: str { "admin" }
+        use_ssl :: bool { true }
+    }
+}
+```
+
+#### Пример 3: Создание и сохранение конфигурации
+**generate_config.py**
+```python
+import scl_parser
+
+# Создание словаря конфигурации
+config = {
+    'app_name': 'MyApplication',
+    'version': '2.1.0',
+    'debug_mode': False,
+    'max_workers': 10,
+    'timeout': 30.5,
+    'features': ['auth', 'api', 'admin'],
+    'limits': [100, 500, 1000],
+    'settings': {
+        'cache_enabled': True,
+        'cache_ttl': 3600,
+        'log_level': 'INFO'
+    }
+}
+
+# Сохранение в файл
+scl_parser.dump(config, "generated_config.scl")
+
+# Или получение в виде строки
+scl_string = scl_parser.dumps(config)
+print(scl_string)
+```
+
+**generated_config.scl** (результат)
+```
+app_name :: str { "MyApplication" }
+version :: str { "2.1.0" }
+debug_mode :: bool { false }
+max_workers :: num { 10 }
+timeout :: fl { 30.5 }
+features :: list(str) { "auth", "api", "admin" }
+limits :: list(num) { 100, 500, 1000 }
+settings :: class {
+    cache_enabled :: bool { true }
+    cache_ttl :: num { 3600 }
+    log_level :: str { "INFO" }
+}
+```
+
+#### Пример 4: Многострочные строки
+**readme_gen.py**
+```python
+import scl_parser
+
+config = scl_parser.loads("""
+project_info :: class {
+    name :: str { "MyProject" }
+    
+    description :: ml {
+        'This is a long description
+        that spans multiple lines.
+        It can contain detailed information
+        about the project.'
+    }
+    
+    readme :: ml {
+        '# MyProject
+        
+        ## Installation
+        pip install myproject
+        
+        ## Usage
+        import myproject'
+    }
+}
+""")
+
+info = config['project_info']
+print(info['name'])
+print("\nDescription:")
+print(info['description'])
+print("\nReadme:")
+print(info['readme'])
 ```
 
 ---
