@@ -130,24 +130,24 @@ ports :: list(num) { 80, 443, 8080 }
 import scl_parser
 
 def load_cfg():
-    config = scl_parser.load(patg/to/cfg.scl)
-return config
+    config = scl_parser.load("patg/to/cfg.scl")
+    return config
 
 config = load_cfg()
 apples = config['count']['apples']
 pears = config['pears']
-print(apples) # Output to console: 2
-print(pears) # Output to console: 3
+print(apples) # output: 2
+print(pears) # output 3
 
 ```
 #### cfg.scl 
 ```
 count :: class {
-    apples :: int { 2 }
-    watermelons :: int { 3 }
+    apples :: num { 2 }
+    watermelons :: num { 3 }
 }
 
-pears :: int { 3 }
+pears :: num { 3 }
 ```
 
 ---
@@ -278,8 +278,8 @@ scl_text = scl_parser.dumps(config)
 import scl_parser
 
 def load_cfg():
-    config = scl_parser.load(patg/to/cfg.scl)
-return config
+    config = scl_parser.load("patg/to/cfg.scl")
+    return config
 
 config = load_cfg()
 apples = config['count']['apples']
@@ -291,11 +291,11 @@ print(pears) # Вывод: 3
 #### cfg.scl 
 ```
 count :: class {
-    apples :: int { 2 }
-    watermelons :: int { 3 }
+    apples :: num { 2 }
+    watermelons :: num { 3 }
 }
 
-pears :: int { 3 }
+pears :: num { 3 }
 ```
 
 ---
