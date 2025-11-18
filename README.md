@@ -1,6 +1,4 @@
-GitHub Repository: [click](https://github.com/vaflyares/scl/tree/main)  
-GitLab Repository: [click](https://gitlab.com/shareui/scl)
-
+NEW REPOSITORY WITH SUPPORT FOR RUST, GO, ELIXIR, RUBY, C: https://github.com/shareui/scl
 # SCL Features
 
 ## Language Features
