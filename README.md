@@ -1,4 +1,4 @@
-NEW REPOSITORY WITH SUPPORT FOR RUST, GO, ELIXIR, RUBY, C: https://github.com/shareui/scl
+NEW REPOSITORY WITH SUPPORT FOR RUST, GO, ELIXIR, RUBY, C, AND MORE: https://github.com/shareui/scl
 # SCL Features
 
 ## Language Features
